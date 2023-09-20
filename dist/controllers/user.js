@@ -12,23 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.login = exports.register = exports.getUsersProducts = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const product_1 = __importDefault(require("../models/product"));
+const user_product_detail_1 = __importDefault(require("../models/user_product_detail"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// export const getUsers = async (req: Request, res: Response) => {
-//   try {
-//     const usuariosConProductos = await Users.findAll({
-//       include: "Products", // Nombre de la asociación
-//     });
-//     res.json(usuariosConProductos);
-//   } catch (error) {
-//     console.error("Error al obtener productos de usuarios:", error);
-//     res
-//       .status(500)
-//       .json({ error: "Ocurrió un error al obtener los datos. " + error });
-//   }
-// };
+const sequelize_1 = require("sequelize");
+const getUsersProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userProducts = yield user_1.default.findAll({
+            include: {
+                model: product_1.default,
+                through: user_product_detail_1.default,
+            },
+            where: {
+                "$products.product_id$": { [sequelize_1.Op.not]: null },
+            },
+        });
+        res.json(userProducts);
+    }
+    catch (error) {
+        console.error("Error al obtener productos de usuarios:", error);
+        res
+            .status(500)
+            .json({ error: "Ocurrió un error al obtener los datos. " + error });
+    }
+});
+exports.getUsersProducts = getUsersProducts;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name_, password_, email } = req.body;
     const hashPassword = yield bcrypt_1.default.hash(password_, 10);

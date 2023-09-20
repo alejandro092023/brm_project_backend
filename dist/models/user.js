@@ -5,7 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = __importDefault(require("../db/connection"));
 const sequelize_1 = require("sequelize");
-const Users = connection_1.default.define("user_", {
+const user_product_detail_1 = __importDefault(require("./user_product_detail"));
+const product_1 = __importDefault(require("./product"));
+const connection_2 = __importDefault(require("../db/connection"));
+const User = connection_1.default.define("user_", {
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
@@ -31,9 +34,11 @@ const Users = connection_1.default.define("user_", {
     updatedAt: false,
     freezeTableName: true,
     timestamps: true,
+    sequelize: connection_2.default,
 });
-// Users.belongsToMany(Products, {
-//   through: UserProductDetail,
-//   foreignKey: "user_id",
-// });
-exports.default = Users;
+User.belongsToMany(product_1.default, {
+    through: user_product_detail_1.default,
+    foreignKey: "user_id",
+    otherKey: "product_id",
+});
+exports.default = User;

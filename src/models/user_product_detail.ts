@@ -1,5 +1,8 @@
 import db from "../db/connection";
 import { DataTypes } from "sequelize";
+import sequelize from "../db/connection";
+import User from "./user";
+import Product from "./product";
 
 const UserProductDetail = db.define(
   "user_product_detail",
@@ -11,9 +14,11 @@ const UserProductDetail = db.define(
     },
     user_id: {
       type: DataTypes.INTEGER,
+      references: { model: User, key: "user_id" },
     },
     product_id: {
       type: DataTypes.STRING,
+      references: { model: Product, key: "product_id" },
     },
     quantity: {
       type: DataTypes.INTEGER,
@@ -27,20 +32,8 @@ const UserProductDetail = db.define(
     updatedAt: false,
     freezeTableName: true,
     timestamps: true,
+    sequelize,
   }
 );
-
-UserProductDetail.init({
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "User", key: "user_id" },
-  },
-  productId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: { model: "Products", key: "product_id" },
-  },
-});
 
 export default UserProductDetail;

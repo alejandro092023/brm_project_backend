@@ -5,6 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = __importDefault(require("../db/connection"));
 const sequelize_1 = require("sequelize");
+const connection_2 = __importDefault(require("../db/connection"));
+const user_1 = __importDefault(require("./user"));
+const product_1 = __importDefault(require("./product"));
 const UserProductDetail = connection_1.default.define("user_product_detail", {
     user_product_detail_id: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -13,9 +16,11 @@ const UserProductDetail = connection_1.default.define("user_product_detail", {
     },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,
+        references: { model: user_1.default, key: "user_id" },
     },
     product_id: {
         type: sequelize_1.DataTypes.STRING,
+        references: { model: product_1.default, key: "product_id" },
     },
     quantity: {
         type: sequelize_1.DataTypes.INTEGER,
@@ -28,17 +33,6 @@ const UserProductDetail = connection_1.default.define("user_product_detail", {
     updatedAt: false,
     freezeTableName: true,
     timestamps: true,
-});
-UserProductDetail.init({
-    userId: {
-        type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: "User", key: "user_id" },
-    },
-    productId: {
-        type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: "Products", key: "product_id" },
-    },
+    sequelize: connection_2.default,
 });
 exports.default = UserProductDetail;

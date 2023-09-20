@@ -1,10 +1,9 @@
-import db from "../db/connection";
 import { DataTypes } from "sequelize";
-import Users from "./user";
-import UserProductDetail from "./user_product_detail";
 import sequelize from "../db/connection";
+import UserProductDetail from "./user_product_detail";
+import User from "./user";
 
-const Products = db.define(
+const Product = sequelize.define(
   "product",
   {
     product_id: {
@@ -36,12 +35,8 @@ const Products = db.define(
     updatedAt: false,
     freezeTableName: true,
     timestamps: true,
+    sequelize,
   }
 );
 
-// Products.belongsToMany(Users, {
-//   through: UserProductDetail,
-//   foreignKey: "product_id",
-// });
-
-export default Products;
+export default Product;

@@ -1,36 +1,44 @@
 import { Request, Response } from "express";
-import Users from "../models/user";
-import Products from "../models/product";
+import User from "../models/user";
+import Product from "../models/product";
+import UserProductDetail from "../models/user_product_detail";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Op } from "sequelize";
 
-// export const getUsers = async (req: Request, res: Response) => {
-//   try {
-//     const usuariosConProductos = await Users.findAll({
-//       include: "Products", // Nombre de la asociación
-//     });
+export const getUsersProducts = async (req: Request, res: Response) => {
+  try {
+    const userProducts = await User.findAll({
+      include: {
+        model: Product,
+        through: UserProductDetail,
+      },
+      where: {
+        "$products.product_id$": { [Op.not]: null },
+      },
+    });
 
-//     res.json(usuariosConProductos);
-//   } catch (error) {
-//     console.error("Error al obtener productos de usuarios:", error);
-//     res
-//       .status(500)
-//       .json({ error: "Ocurrió un error al obtener los datos. " + error });
-//   }
-// };
+    res.json(userProducts);
+  } catch (error) {
+    console.error("Error al obtener productos de usuarios:", error);
+    res
+      .status(500)
+      .json({ error: "Ocurrió un error al obtener los datos. " + error });
+  }
+};
 
 export const register = async (req: Request, res: Response) => {
   const { name_, password_, email } = req.body;
   const hashPassword = await bcrypt.hash(password_, 10);
 
   try {
-    const userFind = await Users.findOne({ where: { name_: name_ } });
+    const userFind = await User.findOne({ where: { name_: name_ } });
 
     if (userFind) {
       return res.status(400).json({ msg: "Ya existe el usuario" });
     }
 
-    await Users.create({
+    await User.create({
       name_: name_,
       password_: hashPassword,
       email: email,
@@ -49,7 +57,7 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   const { name_, password_ } = req.body;
-  const userFind = await Users.findOne({ where: { name_: name_ } });
+  const userFind = await User.findOne({ where: { name_: name_ } });
 
   if (!userFind) {
     return res.status(404).json({
