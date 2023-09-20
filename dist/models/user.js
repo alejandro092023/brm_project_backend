@@ -41,4 +41,6 @@ User.belongsToMany(product_1.default, {
     foreignKey: "user_id",
     otherKey: "product_id",
 });
+User.hasMany(user_product_detail_1.default, { foreignKey: "user_id" });
+user_product_detail_1.default.belongsTo(product_1.default, { foreignKey: "product_id" });
 exports.default = User;

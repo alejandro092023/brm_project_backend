@@ -23,11 +23,13 @@ const getUsersProducts = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const userProducts = yield user_1.default.findAll({
             include: {
-                model: product_1.default,
-                through: user_product_detail_1.default,
+                model: user_product_detail_1.default,
+                include: {
+                    model: product_1.default,
+                },
             },
             where: {
-                "$products.product_id$": { [sequelize_1.Op.not]: null },
+                "$user_product_details.product_id$": { [sequelize_1.Op.not]: null },
             },
         });
         res.json(userProducts);

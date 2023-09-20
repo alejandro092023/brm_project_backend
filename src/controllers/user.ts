@@ -10,11 +10,13 @@ export const getUsersProducts = async (req: Request, res: Response) => {
   try {
     const userProducts = await User.findAll({
       include: {
-        model: Product,
-        through: UserProductDetail,
+        model: UserProductDetail,
+        include: {
+          model: Product,
+        },
       },
       where: {
-        "$products.product_id$": { [Op.not]: null },
+        "$user_product_details.product_id$": { [Op.not]: null },
       },
     });
 
