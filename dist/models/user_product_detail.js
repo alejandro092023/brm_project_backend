@@ -35,4 +35,18 @@ const UserProductDetail = connection_1.default.define("user_product_detail", {
     timestamps: true,
     sequelize: connection_2.default,
 });
+user_1.default.belongsToMany(product_1.default, {
+    through: UserProductDetail,
+    foreignKey: "user_id",
+    otherKey: "product_id",
+});
+product_1.default.belongsToMany(user_1.default, {
+    through: UserProductDetail,
+    foreignKey: "product_id",
+    otherKey: "user_id",
+});
+user_1.default.hasMany(UserProductDetail, { foreignKey: "user_id" });
+product_1.default.hasMany(UserProductDetail, { foreignKey: "product_id" });
+UserProductDetail.belongsTo(product_1.default, { foreignKey: "product_id" });
+UserProductDetail.belongsTo(user_1.default, { foreignKey: "user_id" });
 exports.default = UserProductDetail;

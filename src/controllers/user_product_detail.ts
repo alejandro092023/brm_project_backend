@@ -4,9 +4,12 @@ import Product from "../models/product";
 
 export const shopping = async (req: Request, res: Response) => {
   const { body } = req;
-  console.log(body);
   body.items.forEach(async (item: any) => {
     await UserProductDetail.create(item);
+  });
+  body.items.forEach(async (item: any) => {
+    const product = await Product.findByPk(item.product_id);
+    await product.update({ stock: product.stock - item.quantity });
   });
   res.json({
     msg: "Producto creado!",

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Product from "../models/product";
+import UserProductDetail from "../models/user_product_detail";
+import User from "../models/user";
 
 export const postProduct = async (req: Request, res: Response) => {
   console.log(req);
@@ -37,6 +39,12 @@ export const putProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
   const listProducts = await Product.findAll({
+    include: {
+      model: UserProductDetail,
+      include: {
+        model: User,
+      },
+    },
     where: {
       status_: 1,
     },

@@ -36,4 +36,20 @@ const UserProductDetail = db.define(
   }
 );
 
+User.belongsToMany(Product, {
+  through: UserProductDetail,
+  foreignKey: "user_id",
+  otherKey: "product_id",
+});
+Product.belongsToMany(User, {
+  through: UserProductDetail,
+  foreignKey: "product_id",
+  otherKey: "user_id",
+});
+
+User.hasMany(UserProductDetail, { foreignKey: "user_id" });
+Product.hasMany(UserProductDetail, { foreignKey: "product_id" });
+UserProductDetail.belongsTo(Product, { foreignKey: "product_id" });
+UserProductDetail.belongsTo(User, { foreignKey: "user_id" });
+
 export default UserProductDetail;

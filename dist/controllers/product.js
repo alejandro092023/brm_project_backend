@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProduct = exports.getProduct = exports.getProducts = exports.putProduct = exports.postProduct = void 0;
 const product_1 = __importDefault(require("../models/product"));
+const user_product_detail_1 = __importDefault(require("../models/user_product_detail"));
+const user_1 = __importDefault(require("../models/user"));
 const postProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req);
     const { body } = req;
@@ -51,6 +53,12 @@ const putProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.putProduct = putProduct;
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const listProducts = yield product_1.default.findAll({
+        include: {
+            model: user_product_detail_1.default,
+            include: {
+                model: user_1.default,
+            },
+        },
         where: {
             status_: 1,
         },
