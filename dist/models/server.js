@@ -51,7 +51,7 @@ class Server {
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {
             yield connection_1.default.authenticate();
-            console.log("Connectado a la base de datos");
+            console.log("Conectado a la base de datos");
         });
     }
 }

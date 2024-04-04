@@ -44,7 +44,7 @@ class Server {
 
   async dbConnect() {
     await db.authenticate();
-    console.log("Connectado a la base de datos");
+    console.log("Conectado a la base de datos");
   }
 }
 
